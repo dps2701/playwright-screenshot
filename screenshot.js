@@ -8,9 +8,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 app.post("/screenshot", async (req, res) => {
-    const { url, instanceUrl, accessToken } = req.body;
-    if (!targetURL) {
-        return res.status(400).json({ error: "Missing 'url' query parameter" });
+    const { url } = req.body;
+
+    if (!url) {
+        return res.status(400).json({ error: "URL is required" });
     }
 
     try {
@@ -19,16 +20,8 @@ app.post("/screenshot", async (req, res) => {
         const context = await browser.newContext();
         const page = await context.newPage();
 
-        await page.emulateMedia({ screen: { scaleFactor: 0.7 } });
-
         // Navigate to the provided URL
-        await page.goto(instanceUrl);
-
-        await page.evaluate((token) => {
-            document.cookie = `sid=${token}; path=/; Secure`;
-        }, accessToken);
-
-        await page.goto(url,{ waitUntil: "networkidle" });
+        await page.goto(url);
 
         // Wait for the page to load
         await page.waitForTimeout(3000);
