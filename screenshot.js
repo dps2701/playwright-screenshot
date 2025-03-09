@@ -20,7 +20,7 @@ app.post("/screenshot", async (req, res) => {
         const page = await context.newPage();
         const languageChangeUrl =instanceUrl+'lightning/settings/personal/LanguageAndTimeZone/home';
 
-        await page.emulateMedia({ screen: { scaleFactor: 0.75 } });
+        await page.emulateMedia({ screen: { scaleFactor: 0.70 } });
 
         // Navigate to the provided URL
         await page.goto(instanceUrl);
@@ -62,13 +62,6 @@ app.post("/screenshot", async (req, res) => {
         await page.waitForSelector(accountRecordFormPage, { state: 'visible' });
         const accountRecordFormScreenshotItalian = await accountRecordFormPage.screenshot();
         screenshots.push(accountRecordFormScreenshotItalian.toString("base64"));
-
-        // Capture Screenshot of a Specific Element (Example: First Button)
-        const button = await page.$("button");
-        if (button) {
-            const buttonScreenshot = await button.screenshot();
-            screenshots.push(buttonScreenshot.toString("base64"));
-        }
 
         // Close browser
         await browser.close();
